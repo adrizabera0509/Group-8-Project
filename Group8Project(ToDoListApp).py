@@ -1,12 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Feb 29 22:39:10 2020
-
-@author: Adriza
-"""
-
-#arghyadip
-
 from tkinter import *
 import mysql.connector
 
