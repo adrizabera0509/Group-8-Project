@@ -8,217 +8,82 @@ mycursor = conn.cursor()
 
 
 
-class LoginGUI:
+class HomeGUI:
     
-    def __init__(self):
-        self.root = Tk()
-        self.root.title("Google Keep")
-        self.root.minsize(400, 600)
-        self.root.maxsize(400, 600)
-
-        self.root.configure(background = "#00a65a")
-
-        self.Label1 = Label(self.root, text = "Email" , bg = "#00a65a", fg = "#ffffff")
-        self.Label1.configure(font = ("Helvetica",20,"bold"))
-        self.Label1.pack(pady = (30,10))
-        
-        self.email = Entry(self.root)
-        self.email.pack(ipadx = 40, ipady = 5)
-        
-        self.Label2 = Label(self.root, text = "Password" , bg = "#00a65a", fg = "#ffffff")
-        self.Label2.configure(font = ("Helvetica",20,"bold"))
-        self.Label2.pack(pady = (30,10))
-        
-        self.password = Entry(self.root)
-        self.password.pack(ipadx = 40, ipady = 5)
-        
-        
-        self.login = Button(self.root, text = "Login" , bg = "#1c2833" ,fg = "#ffffff" , width = 15, height = 2, command = lambda:self.loginButton())
-        self.login.configure(font = ("Helvetica",10,"bold"))
-        self.login.pack(pady = (25,25))
-        
-
-        self.loginMessage = Label(self.root, text = "", bg = "#00a56a", fg = "#ffffff")
-        self.loginMessage.configure(font = ("Helvetica",12))
-        self.loginMessage.pack(pady = (5,10))
-        
-
-        self.registration = Button(self.root, text = "Registration" , bg = "#1c2833" ,fg = "#ffffff" , width = 15, height = 2, command = lambda:self.registerButton())
-        self.registration.configure(font = ("Helvetica",10,"bold"))
-        self.registration.pack(pady = (25,25))
-
-        
-
-        self.root.mainloop()
-
-        
-
-    def loginButton(self):
-
-        loginEmail = self.email.get()
-        loginPassword = self.password.get()
-
-        mycursor.execute("SELECT * FROM `users`")
-        result = mycursor.fetchall()
-
-        #print(result)
-
-        for ele in result:
-            if(loginEmail==ele[2] and loginPassword==ele[3]):
-                statusMessage = "Login successful"
-                self.loginMessage.configure(text = statusMessage)
-                #self.root.destroy()
-                listsObj = ListsGUI(ele[0], ele[1])
-                break
-        else:
-            statusMessage = "Incorrect credentials"
-            self.loginMessage.configure(text = statusMessage)
-
-        
-
-
-    def registerButton(self):
-        regObj = RegisterGUI()
-        
-
-
-
-
-class RegisterGUI:
-    
-    def __init__(self):
-        self.root = Tk()
-        self.root.title("Google Keep")
-        self.root.minsize(400, 600)
-        self.root.maxsize(400, 600)
-
-        self.root.configure(background = "#00a65a")
-
-        self.Label1 = Label(self.root, text = "Enter username", bg = "#00a56a", fg = "#ffffff")
-        self.Label1.configure(font = ("Babas Neue",20,"bold"))
-        self.Label1.pack(pady = (30,10))
-
-        self.newUsername = Entry(self.root)
-        self.newUsername.pack(ipadx = 40, ipady = 5)
-
-        self.Label2 = Label(self.root, text = "Enter email" , bg = "#00a65a", fg = "#ffffff")
-        self.Label2.configure(font = ("Helvetica",20,"bold"))
-        self.Label2.pack(pady = (30,10))
-        
-        self.newEmail = Entry(self.root)
-        self.newEmail.pack(ipadx = 40, ipady = 5)
-        
-        self.Label3 = Label(self.root, text = "Choose password" , bg = "#00a65a", fg = "#ffffff")
-        self.Label3.configure(font = ("Helvetica",20,"bold"))
-        self.Label3.pack(pady = (30,10))
-        
-        self.newPassword = Entry(self.root)
-        self.newPassword.pack(ipadx = 40, ipady = 5)
-
-        
-
-        self.registration = Button(self.root, text = "Register" , bg = "#1c2833" ,fg = "#ffffff" , width = 15, height = 2, command = lambda:self.newRegistration())
-        self.registration.configure(font = ("Helvetica",10,"bold"))
-        self.registration.pack(pady = (25,25))
-
-
-        self.regMessage = Label(self.root, text = "", bg = "#00a56a", fg = "#ffffff")
-        self.regMessage.configure(font = ("Helvetica",10))
-        self.regMessage.pack(pady = (5,10))
-        
-
-        
-
-        self.root.mainloop()
-
-
-    def newRegistration(self):
-
-        regUsername = self.newUsername.get()
-        regEmail = self.newEmail.get()
-        regPassword = self.newPassword.get()
-
-        query = "INSERT INTO `users`(user_id, username, email, password) VALUES(NULL, %s, %s, %s)"
-        value = (regUsername, regEmail, regPassword)
-
-        mycursor.execute(query, value)
-        conn.commit()
-
-        regStatus = "Registration complete, please proceed to login"
-        self.regMessage.configure(text = regStatus)
-        
-
-        
-
-
-        
-class ListsGUI:
-
     def __init__(self, userid, username):
-        self.root=Tk()
-        self.root.title("My Lists")
-        self.root.minsize(400,600)
-        self.root.maxsize(400,600)
-
-        self.root.configure(background="#00a65a")
-
-        self.label1=Label(self.root,text="Welcome {}".format(username),bg="#00a65a",fg="#ffffff")
-        self.label1.configure(font=("Helvetica",20,"bold"))
-        self.label1.pack(pady=(30,10))
-
-
-        self.listsInfo=Label(self.root,text="",bg="#00a65a",fg="#ffffff",justify="left")
-        self.listsInfo.configure(font=("Helvetica",14))
-        self.listsInfo.pack(pady=(5,10))
-
-
         
-        self.addListName=Entry(self.root)
-        self.addListName.pack(ipadx=40,ipady=5)
-
-        self.addLists=Button(self.root,text="Add",bg="#1c2833",fg="#ffffff",width=25,height=2, command=lambda:self.addList(userid))
-        self.addLists.configure(font=("Helvetica",10))
-        self.addLists.pack(pady=(10,20))
-
-
-        self.viewListId=Entry(self.root)
-        self.viewListId.pack(ipadx=40,ipady=5)
-
-        self.viewLists=Button(self.root,text="View",bg="#1c2833",fg="#ffffff",width=25,height=2, command=lambda:self.viewList(userid))
-        self.viewLists.configure(font=("Helvetica",10))
-        self.viewLists.pack(pady=(10,20))
-
-
-        self.deleteListId=Entry(self.root)
-        self.deleteListId.pack(ipadx=40,ipady=5)
-
-        self.deleteLists=Button(self.root,text="Delete",bg="#1c2833",fg="#ffffff",width=25,height=2, command=lambda:self.deleteList(userid))
-        self.deleteLists.configure(font=("Helvetica",10))
-        self.deleteLists.pack(pady=(10,20))
-
-
+        self.root = tk.Tk()
+        self.root.title("Home")
+        
+        self.root.minsize(400, 600)
+        self.root.maxsize(400, 600)
+        
+        self.root.configure(background = "#FF9900")
+        
+        self.Label1 = tk.Label(self.root, text = "Welcome {}".format(username), bg = "#FF9900", fg = "#000000")
+        self.Label1.configure(font = ("Helvetica",22,"italic"))
+        self.Label1.pack(pady = (15,5)) 
+        
+        self.lists = tk.Label(self.root,text="",height = 8, bg="#FF9900",fg="#000000", justify = "left")
+        self.lists.configure(font=("Constantia",12))
+        self.lists.pack(pady=(5,10))
+        
+            
+        
+        self.newlist = tk.Entry(self.root)
+        self.newlist.pack(ipadx = 40, ipady = 5)
+        
+        self.add = tk.Button(self.root, text = "Add List" , bg = "#000000" ,fg = "#FFFFFF" , width = 10, height = 2, command = lambda : self.addList(userid))                     
+        self.add.configure(font = ("Bebas Neue",10,"bold"))
+        self.add.pack(pady = (10,20))
+        
+        self.viewLabel = tk.Label(self.root, text = "Enter list no to View List", bg = "#FF9900", fg = "#000000")
+        self.viewLabel.configure(font = ("Bebas Neue",10))
+        self.viewLabel.pack(pady = (5,5)) 
+        
+        self.viewlist = tk.Entry(self.root)
+        self.viewlist.pack(ipadx = 40, ipady = 5)
+        
+        self.view = tk.Button(self.root, text = "View" , bg = "#000000" ,fg = "#FFFFFF" , width = 10, height = 2, command = lambda : self.viewList(userid))                     
+        self.view.configure(font = ("Bebas Neue",10,"bold"))
+        self.view.pack(pady = (10,10))
+        
+        self.viewLabel = tk.Label(self.root, text = "Enter list no to Delete List", bg = "#FF9900", fg = "#000000")
+        self.viewLabel.configure(font = ("Bebas Neue",10))
+        self.viewLabel.pack(pady = (5,5))
+        
+        self.dellist = tk.Entry(self.root)
+        self.dellist.pack(ipadx = 40, ipady = 5)
+        
+        self.delete = tk.Button(self.root, text = "Delete" , bg = "#000000" ,fg = "#FFFFFF" , width = 10, height = 2, command = lambda : self.deleteList(userid))                     
+        self.delete.configure(font = ("Bebas Neue",10,"bold"))
+        self.delete.pack(pady = (10,25))
+        
+        
+        
         self.displayLists(userid)
         
         self.root.mainloop()
-
-
+    
     def displayLists(self, userid):
         mycursor.execute("SELECT list_id, list_name From `lists` WHERE user_id LIKE {}".format(userid))
         records = mycursor.fetchall()
         #print(records)
         
-        if(len(records) != 0):
+        if len(records) != 0:
             message = ""
             for ele in records:
-                message+= str(ele[0]) + "  " + str(ele[1]) + "\n"
-            #print(message)
-            self.listsInfo.configure(text = message)
-
-
+                message+= str(ele[0]) + ".  " + "    " + str(ele[1]) + "\n"
+        #print(message)
+            self.lists.configure(text = message) 
+    
+        
+        
     def addList(self, userid):
-        listname = self.addListName.get()
+        listname = self.newlist.get()
             
         query = "INSERT INTO `lists`(list_id, list_name, user_id) VALUES (NULL, %s, %s)"
+        
         val = (listname, userid)
         mycursor.execute(query, val)
         
@@ -226,9 +91,8 @@ class ListsGUI:
         
         self.displayLists(userid)
         
-        
     def deleteList(self, userid):
-        listid = int(self.deleteListId.get())
+        listid = int(self.dellist.get())
         
         query1 = "DELETE FROM `tasks` WHERE list_id LIKE %s"
         val1 = (listid,)
@@ -243,47 +107,49 @@ class ListsGUI:
         self.displayLists(userid)            
 
     def viewList(self, userid):
-        listid = int(self.viewListId.get())
-        tasksObj = TasksGUI(listid)
+        listid = int(self.viewlist.get())
+        ViewGUI(listid)
 
 
-class TasksGUI:
+
+
+class ViewGUI:
     
     def __init__(self, listid):
         
-        self.root=Tk()
+        self.root=tk.Tk()
         self.root.title("View Tasks")
         
         self.root.minsize(400, 600)
         self.root.maxsize(400, 600)
 
-        self.root.configure(background = "#00a65a")
+        self.root.configure(background = "#FF9900")
         
-        self.Label1 = Label(self.root, text = "" , bg = "#00a65a", fg = "#ffffff")
-        self.Label1.configure(font = ("Helvetica",22,"bold"))
-        self.Label1.pack(pady = (30,10))
+        self.Label1 = tk.Label(self.root, text = "" , bg = "#FF9900", fg = "#000000")
+        self.Label1.configure(font = ("Bebas Neue",22))
+        self.Label1.pack(pady = (15,20))
         
         mycursor.execute("SELECT list_name FROM `lists` WHERE list_id LIKE {}".format(listid))
         result = mycursor.fetchall()
         self.Label1.configure(text = result[0][0])
         
-        self.tasksList = Label(self.root,text="",bg="#00a65a",fg="#ffffff",justify="left")
-        self.tasksList.configure(font=("Helvetica",12))
-        self.tasksList.pack(pady=(5,10))
+        self.tasks = tk.Label(self.root,text="", height = 8, bg="#FF9900", fg="#000000", justify = "left")
+        self.tasks.configure(font=("Constantia",12))
+        self.tasks.pack(pady=(5,10))
         
-        self.newTask = Entry(self.root)
-        self.newTask.pack(ipadx = 40, ipady = 5)
+        self.newtask = tk.Entry(self.root)
+        self.newtask.pack(ipadx = 40, ipady = 5)
         
-        self.addTasks = Button(self.root, text = "Add New Task" , bg = "#1c2833" ,fg = "#ffffff" , width = 15, height = 2, command = lambda:self.addTask(listid))
-        self.addTasks.configure(font = ("Helvetica",10,"bold"))
-        self.addTasks.pack(pady = (25,25))
+        self.addTasks = tk.Button(self.root, text = "Add New Task" , bg = "#000000" ,fg = "#FFFFFF" , width = 15, height = 2, command = lambda:self.addTask(listid))
+        self.addTasks.configure(font = ("Bebas Neue",10,"bold"))
+        self.addTasks.pack(pady = (10,25))
         
-        self.status = Entry(self.root)
+        self.status = tk.Entry(self.root)
         self.status.pack(ipadx = 40, ipady = 5)
         
-        self.statusButton = Button(self.root, text = "Change Status" , bg = "#1c2833" ,fg = "#ffffff" , width = 15, height = 2, command = lambda:self.changeStatus(listid))
-        self.statusButton.configure(font = ("Helvetica",10,"bold"))
-        self.statusButton.pack(pady = (25,25))
+        self.StatusButton = tk.Button(self.root, text = "Enter Task no. to Change Task Status" , bg = "#000000" ,fg = "#FFFFFF" , width = 25, height = 2, command = lambda:self.changeStatus(listid))
+        self.StatusButton.configure(font = ("Bebas Neue",10,"bold"))
+        self.StatusButton.pack(pady = (10,25))
         
         self.displayTasks(listid)
         
@@ -298,14 +164,14 @@ class TasksGUI:
             message = ""
             for ele in records:
                 if ele[2] == 0:
-                    message+= str(ele[0]) + "  " + " " + "  " + str(ele[1]) + "\n"
+                    message+= str(ele[0]) + ".    " + " *-*    " +  str(ele[1])  + "\n"
                 else:
-                    message+= str(ele[0]) + "  " + "*" + "  " + str(ele[1]) + "\n"
+                    message+= str(ele[0]) + ".    " + " ^-^    " + str(ele[1]) + "\n"
             #print(message)
-            self.tasksList.configure(text = message)
+            self.tasks.configure(text = message)
 
     def addTask(self, listid):
-        description = self.newTask.get()
+        description = self.newtask.get()
             
         query = "INSERT INTO `tasks`(task_id, description, task_status, list_id) VALUES (NULL, %s, %s, %s)"
         
@@ -335,7 +201,136 @@ class TasksGUI:
         
         self.displayTasks(listid)
 
+class RegistrationGUI:
+
+    def __init__(self):
+
+        self.root=tk.Tk()
+        self.root.title("Registration")
+        
+        self.root.minsize(400, 600)
+        self.root.maxsize(400, 600)
+
+        self.root.configure(background = "#FF9900")
+        
+        self.Label1 = tk.Label(self.root, text = "User Name" , bg = "#FF9900", fg = "#000000")
+        self.Label1.configure(font = ("Bebas Neue",18))
+        self.Label1.pack(pady = (110,10))
+        
+        self.username = tk.Entry(self.root)
+        self.username.pack(ipadx = 40, ipady = 5)
+        
+        self.Label2 = tk.Label(self.root, text = "Email" , bg = "#FF9900", fg = "#000000")
+        self.Label2.configure(font = ("Bebas Neue",18))
+        self.Label2.pack(pady = (30,10))
+        
+        self.new_email = tk.Entry(self.root)
+        self.new_email.pack(ipadx = 40, ipady = 5)
+        
+        self.Label3 = tk.Label(self.root, text = "Password" , bg = "#FF9900", fg = "#000000")
+        self.Label3.configure(font = ("Bebas Neue",18))
+        self.Label3.pack(pady = (30,10))
+        
+        self.new_password = tk.Entry(self.root)
+        self.new_password.pack(ipadx = 40, ipady = 5)
+    
+        self.registration = tk.Button(self.root, text = "Register" , bg = "#000000" ,fg = "#FFFFFF" , width = 15, height = 2, command = lambda:self.addUser())
+        self.registration.configure(font = ("Bebas Neue",10,"bold"))
+        self.registration.pack(pady = (25,25))
+        
+        self.root.mainloop()
+        
+    def addUser(self):
+        uname = self.username.get()
+        newemail = self.new_email.get()
+        newpass = self.new_password.get()
+        
+        query = "INSERT INTO `users`(user_id, username, email, password) VALUES (NULL, %s, %s, %s)"
+        val = (uname, newemail, newpass)
+        
+        mycursor.execute(query, val)
+        conn.commit()
+        
+        mycursor.execute("SELECT * FROM `users`")
+        result = mycursor.fetchall()
+        for ele in result:
+            if(newemail == ele[2] and newpass== ele[3]):
+                self.root.destroy()
+                HomeGUI(ele[0], ele[1])
+                break
+        
+        #print(mycursor.rowcount, "record(s) inserted.")
+        
 
 
+class LoginGUI:
+    
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("To Do List")
+        self.root.minsize(400, 600)
+        self.root.maxsize(400, 600)
 
-loginObj = LoginGUI()
+        self.root.configure(background = "#FF9900")
+                            
+        self.appName = tk.Label(self.root, text = "Tasky" , bg = "#FF9900", fg = "#000000")
+        self.appName.configure(font = ("Bebas Neue",32, "italic"))
+        self.appName.pack(pady = (50,5))
+        
+        self.line = tk.Label(self.root, text = "Manages your tasks ;)" , bg = "#FF9900", fg = "#000000")
+        self.line.configure(font = ("Bebas Neue",10, "italic"))
+        self.line.pack(pady = (5,10))
+
+        self.Label1 = tk.Label(self.root, text = "Email" , bg = "#FF9900", fg = "#000000")
+        self.Label1.configure(font = ("Bebas Neue",18))
+        self.Label1.pack(pady = (30,10))
+        
+        self.email = tk.Entry(self.root)
+        self.email.pack(ipadx = 40, ipady = 5)
+        
+        self.Label2 = tk.Label(self.root, text = "Password" , bg = "#FF9900", fg = "#000000")
+        self.Label2.configure(font = ("Bebas Neue",18))
+        self.Label2.pack(pady = (30,10))
+        
+        self.password = tk.Entry(self.root)
+        self.password.pack(ipadx = 40, ipady = 5)
+        
+        
+        self.login = tk.Button(self.root, text = "Login" , bg = "#000000" ,fg = "#FFFFFF" , width = 15, height = 2, command = lambda:self.loginButton())
+        self.login.configure(font = ("Bebas Neue",10,"bold"))
+        self.login.pack(pady = (20,25))
+        
+        self.Label3 = tk.Label(self.root, text = "" , bg = "#FF9900", fg = "#000000")
+        self.Label3.configure(font = ("Bebas Neue",10))
+        self.Label3.pack(pady = (5,5))
+        
+        self.registration = tk.Button(self.root, text = "Register" , bg = "#000000" ,fg = "#FFFFFF" , width = 15, height = 2, command = lambda:self.registrationButton())
+        self.registration.configure(font = ("Bebas Neue",10,"bold"))
+        self.registration.pack(pady = (5,25))
+
+        self.root.mainloop()
+
+    def loginButton(self):
+
+        e = self.email.get()
+        p = self.password.get()
+
+        mycursor.execute("SELECT * FROM `users`")
+        result = mycursor.fetchall()
+    
+        for ele in result:
+            if(e== ele[2] and p== ele[3]):
+                self.root.destroy()
+                obj3 = HomeGUI(ele[0], ele[1])
+                break
+        else:
+            self.Label3.configure(text = "Can't log in? Please register.")
+    
+    def registrationButton(self):
+        self.root.destroy()
+        RegistrationGUI()
+        
+        
+    
+obj = LoginGUI()
+
